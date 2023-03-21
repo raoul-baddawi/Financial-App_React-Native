@@ -14,7 +14,7 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://192.168.0.108:8000/api/login', {
+      const response = await axios.post('http://192.168.14.173:8000/api/login', {
         email: credentials.email,
         password: credentials.password,
       });
@@ -32,26 +32,34 @@ const LoginPage = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={credentials.email}
-        onChangeText={(text) =>
-          setCredentials({ ...credentials, email: text })
-        }
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={credentials.password}
-        onChangeText={(text) =>
-          setCredentials({ ...credentials, password: text })
-        }
-      />
-      <Button title="Login" onPress={handleLogin} />
-      <Text>{error && <Text style={styles.error}>{error}</Text>}</Text>
+    <View style={styles.wrapper}>
+      <View style={styles.header}>
+        <View style={styles.circle}>
+          <Text style={styles.text}>Login?</Text>
+        </View>
+      </View>
+      <View style={styles.container}>
+        <Text style={styles.welcome}>Welcome Back!</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={credentials.email}
+          onChangeText={(text) =>
+            setCredentials({ ...credentials, email: text })
+          }
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          value={credentials.password}
+          onChangeText={(text) =>
+            setCredentials({ ...credentials, password: text })
+          }
+        />
+        <Button title="Login" onPress={handleLogin} style={styles.btn}/>
+        <Text>{error && <Text style={styles.error}>{error}</Text>}</Text>
+      </View>
     </View>
   );
 };
@@ -63,18 +71,60 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     width: '100%',
+    height: '65vh'
   },
   input: {
-    width: '90%',
+    width: '80%',
+    height: '3.3rem',
     padding: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#000',
     marginBottom: 10,
-    borderRadius: 5,
+    borderRadius: 5
   },
   error: {
     color: 'red',
     marginTop: 10,
+  },
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100vh',
+    width : '100%',
+    backgroundColor: '#000'
+  }, 
+  header: {
+    height: '35vh',
+    backgroundColor: 'rgb(0, 140, 255)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'baseline',
+    position: 'relative'
+  },
+  circle: {
+    width: '300px',
+    height: '300px',
+    borderRadius: '50%',
+    backgroundColor: 'white',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    transform: 'translate(-40%, -40%)'
+  },
+  text: {
+    color: 'rgb(0, 140, 255)',
+    fontSize: 'xx-large',
+    marginLeft: '90px',
+    marginTop: '140px',
+    fontWeight: 'bold'
+  },
+  welcome: {
+    paddingBottom: '50px',
+    margin: '0px',
+    marginTop: '-60px',
+    fontSize: 'larger',
+    fontWeight: 'bold'
   }
 });
 
