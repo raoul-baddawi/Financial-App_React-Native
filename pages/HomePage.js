@@ -1,41 +1,77 @@
 import { useState, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import axios from "axios";
+import Targetgoal from "./Targetgoal";
 
 function HomePage() {
-
-   const [fixedData, setfixedData] = useState([]);
-  
-
+ 
+  const [reportData, setreportData] = useState([]);
+  const [selectValue, setselectValue] = useState("");
   useEffect(() => {
-    getfixed();
-  }, []);
+    getReport();
+  }, [selectValue]);
 
-  const getfixed = async () => {
-    const res = await axios.get("http://192.168.23.94:8000/api/report");
-    setfixedData(res.data.message);
+  const getReport = async () => {
+    let res;
+    if (selectValue === "fixed") {
+      res = await axios.get("http://192.168.0.115:8000/api/fixed");
+    }
+    if (selectValue === "recurring") {
+      res = await axios.get("http://192.168.0.115:8000/api/recurring");
+    }
+    const reportData = res.data.message
+      .slice(-3)
+      .filter((item) => item.isDeleted === 0);
+    setreportData(reportData.reverse());
   };
-  // console.log("Test", fixedData);
 
-
+  console.log(reportData);
 
   return (
-       <ScrollView>
-      <Targetgoal/>
-      <View style={styles.appContainer}>
-        <Text style={styles.text}>Report</Text>
-        {fixedData.map((item, index) => (
+    <ScrollView style={styles.appContainer}>
+      <Targetgoal />
+      <View style={styles.reportsection}>
+        <select
+          style={styles.reportcategory}
+          id="year-input"
+          value={selectValue}
+          onChange={(e) => setselectValue(e.target.value)}
+        >
+          <option value="">Select Report Type</option>
+          <option value="fixed">Fixed</option>
+          <option value="recurring">Recurring</option>
+        </select>
+
+        {reportData.map((item, index) => (
           <View style={styles.goalContainer} key={index}>
             <Text
               style={{
-                color: item.type === "expense" ? "red" : "rgb(0 189 211)",
+                color: item.type === "expense" ? "red" : "blue",
+              }}
+            >
+              {item.title}
+            </Text>
+            <Text
+              style={{
+                color: item.type === "expense" ? "red" : "blue",
               }}
             >
               {item.type}
             </Text>
-            <Text style={styles.goal}>{item.title}</Text>
-            <Text style={styles.goal}>${item.amount}</Text>
-            <Text style={styles.goal}>{item.category}</Text>
+            <Text
+              style={{
+                color: item.type === "expense" ? "red" : "blue",
+              }}
+            >
+              {item.category}
+            </Text>
+            <Text
+              style={{
+                color: item.type === "expense" ? "red" : "blue",
+              }}
+            >
+              {item.amount}$
+            </Text>
           </View>
         ))}
       </View>
@@ -43,38 +79,32 @@ function HomePage() {
   );
 }
 
-const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   backgroundColor: "black",
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  // },
+export default HomePage
 
+
+const styles = StyleSheet.create({
   appContainer: {
-    marginTop: 60,
-    paddingHorizontal: 10,
+    backgroundColor: "lightgray",
   },
 
-  text: {
+  reportcategory: {
     fontSize: 18,
-    borderRadius: 20,
-    borderLeftWidth: 1,
-    borderBottomWidth: 1,
-    borderRightWidth: 1,
-    borderTopWidth: 1,
+    borderRadius: 40,
     borderColor: "black",
     flex: 1,
     margin: 20,
+    padding: 5,
     marginLeft: 120,
+    marginBottom: 10,
     marginRight: 120,
-    paddingLeft: 25,
+
     justifyContent: "center",
     alignItems: "center",
   },
 
   goalContainer: {
     padding: 18,
+    margin: 10,
     borderLeftWidth: 1,
     borderBottomWidth: 1,
     borderRightWidth: 1,
@@ -85,9 +115,20 @@ const styles = StyleSheet.create({
     gap: 40,
   },
 
+  reportsection: {
+    backgroundColor: "white",
+    paddingBottom: 50,
+    margin: 20,
+    paddingHorizontal: 10,
+    borderRadius: 25,
+    borderLeftWidth: 1,
+    borderBottomWidth: 1,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderColor: "white",
+  },
+
   goal: {
     color: "black",
- 
   },
 });
-export default HomePage;
