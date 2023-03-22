@@ -14,13 +14,14 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://192.168.14.173:8000/api/login', {
+      const response = await axios.post('http://192.168.0.108:8000/api/login', {
         email: credentials.email,
         password: credentials.password,
       });
       const token = response.data.access_token;
       if (token) {
         await AsyncStorage.setItem('token', token);
+        console.log(token);
         navigation.navigate('Home'); // Navigate to home page after successful login
       } else {
         throw new Error('Invalid response from server');
